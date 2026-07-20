@@ -1,0 +1,878 @@
+<title>Börsenblick – Montag, 20. Juli 2026</title>
+<style>
+  :root {
+    --bg: #090d18; --surface: #121a2c; --surface-2: #1a2440; --border: #2a3454;
+    --text: #eef1f9; --text-muted: #8993b0; --accent: #19c9ab; --accent-soft: #19c9ab20;
+    --pos: #22d38a; --pos-soft: #22d38a1c; --neg: #ff6b6b; --neg-soft: #ff6b6b1c;
+    --hold: #ffb648; --hold-soft: #ffb6481c;
+    --cat1: #19c9ab; --cat2: #5b8fff; --cat3: #b285ff; --cat4: #ffb648; --cat5: #ff8fc0; --cat6: #6fe0d0;
+    --serif: -apple-system, "SF Pro Rounded", ui-rounded, "Segoe UI", Roboto, sans-serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --glow: radial-gradient(ellipse 800px 360px at 50% -100px, #19c9ab22, transparent 70%);
+    --shadow: 0 12px 32px -12px rgba(3,8,20,.55);
+  }
+  :root[data-theme="light"] {
+    --bg: #eef2f9; --surface: #ffffff; --surface-2: #e8eef7; --border: #d5deec;
+    --text: #0e1526; --text-muted: #57617a; --accent: #0d9d81; --accent-soft: #0d9d8114;
+    --pos: #0f9d58; --pos-soft: #0f9d5814; --neg: #d64545; --neg-soft: #d6454514;
+    --hold: #b3790f; --hold-soft: #b3790f16;
+    --cat1: #0d9d81; --cat2: #3762d6; --cat3: #7a4fd6; --cat4: #b3790f; --cat5: #c14f8c; --cat6: #0f9d81;
+    --glow: radial-gradient(ellipse 800px 360px at 50% -100px, #0d9d8114, transparent 70%);
+    --shadow: 0 12px 28px -14px rgba(20,30,50,.18);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #eef2f9; --surface: #ffffff; --surface-2: #e8eef7; --border: #d5deec;
+      --text: #0e1526; --text-muted: #57617a; --accent: #0d9d81; --accent-soft: #0d9d8114;
+      --pos: #0f9d58; --pos-soft: #0f9d5814; --neg: #d64545; --neg-soft: #d6454514;
+      --hold: #b3790f; --hold-soft: #b3790f16;
+      --cat1: #0d9d81; --cat2: #3762d6; --cat3: #7a4fd6; --cat4: #b3790f; --cat5: #c14f8c; --cat6: #0f9d81;
+      --glow: radial-gradient(ellipse 800px 360px at 50% -100px, #0d9d8114, transparent 70%);
+      --shadow: 0 12px 28px -14px rgba(20,30,50,.18);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { max-width: 100%; overflow-x: hidden; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration-color: var(--accent-soft); }
+  a:hover { text-decoration-color: var(--accent); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .masthead, .briefing { animation: rise .7s cubic-bezier(.2,.7,.3,1) both; }
+    .briefing { animation-delay: .08s; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .top-glow { position: absolute; inset: 0 0 auto 0; height: 420px; background: var(--glow); pointer-events: none; z-index: 0; }
+  .page { max-width: 1180px; margin: 0 auto; padding: 40px 24px 80px; position: relative; z-index: 1; }
+
+  .masthead { text-align: center; margin-bottom: 8px; }
+  .kicker { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 10px; }
+  .wordmark { font-family: var(--serif); font-size: clamp(34px, 5.5vw, 50px); font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  .dateline { color: var(--text-muted); font-size: 14px; margin: 10px 0 0; }
+
+  /* Advisor briefing block */
+  .briefing {
+    display: grid; grid-template-columns: 260px minmax(0,1fr); gap: 0;
+    max-width: 980px; margin: 36px auto 0; border: 1px solid var(--border); border-radius: 24px;
+    background: var(--surface); overflow: hidden; box-shadow: var(--shadow);
+  }
+  @media (max-width: 720px) { .briefing { grid-template-columns: 1fr; } }
+  .briefing-stat { padding: 26px 26px; border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; }
+  @media (max-width: 720px) { .briefing-stat { border-right: none; border-bottom: 1px solid var(--border); } }
+  .briefing-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
+  .briefing-value { font-family: var(--serif); font-size: 40px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+  .briefing-delta { display: inline-block; margin-top: 10px; font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; padding: 4px 10px; border-radius: 100px; width: fit-content; }
+  .briefing-delta.neg { color: var(--neg); background: var(--neg-soft); }
+  .briefing-delta.pos { color: var(--pos); background: var(--pos-soft); }
+
+  /* Advisor chat widget */
+  .advisor-chat { max-width: 980px; margin: 22px auto 0; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 22px 24px; box-shadow: var(--shadow); }
+  .advisor-chat-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .advisor-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--cat2)); flex: none; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .advisor-chat-head h2 { font-family: var(--serif); font-size: 16px; font-weight: 700; margin: 0; }
+  .advisor-chat-head p { font-size: 12px; color: var(--text-muted); margin: 2px 0 0; }
+  .advisor-form { display: flex; gap: 10px; }
+  .advisor-form input { flex: 1; background: var(--surface-2); border: 1px solid var(--border); border-radius: 100px; padding: 12px 18px; color: var(--text); font-family: var(--sans); font-size: 14px; }
+  .advisor-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .advisor-form button { background: var(--accent); color: var(--bg); border: none; border-radius: 100px; padding: 0 22px; font-family: var(--sans); font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .advisor-form button:hover { opacity: .9; }
+  .advisor-suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .advisor-suggestions button { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); font-family: var(--sans); font-size: 12px; padding: 6px 13px; border-radius: 100px; cursor: pointer; }
+  .advisor-suggestions button:hover { color: var(--text); border-color: var(--accent); }
+  .advisor-note { font-size: 11px; color: var(--text-muted); margin: 12px 0 0; line-height: 1.5; }
+
+  .todo-list { padding: 22px 26px; }
+  .todo-list h2 { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 0 0 14px; }
+  .todo-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+  .todo-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .todo-item:first-child { padding-top: 0; }
+  .todo-num { flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-size: 11.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+  .todo-item p { margin: 0; font-size: 14px; line-height: 1.5; }
+  .todo-item .tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 1px 7px; border-radius: 5px; margin-right: 7px; vertical-align: middle; }
+  .tag.urgent { color: var(--neg); background: var(--neg-soft); }
+  .tag.money { color: var(--accent); background: var(--accent-soft); }
+  .tag.watch { color: var(--text-muted); background: var(--surface-2); }
+
+  main.col { max-width: 980px; margin: 0 auto; }
+
+  .section { margin: 44px 0; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+  .section-head h2 { font-family: var(--serif); font-size: 23px; font-weight: 600; margin: 0; }
+  .section-head .sub { font-size: 12.5px; color: var(--text-muted); }
+
+  /* Depot table (shared style) */
+  .alloc-bar { display: flex; height: 10px; border-radius: 6px; overflow: hidden; margin-bottom: 12px; border: 1px solid var(--border); }
+  .alloc-bar span { height: 100%; }
+  .alloc-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 11.5px; color: var(--text-muted); margin-bottom: 22px; }
+  .alloc-legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 5px; vertical-align: middle; }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  table th { text-align: left; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  table td { padding: 13px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  table tbody tr:last-child td { border-bottom: none; }
+  table tbody tr { transition: background .15s ease; }
+  table tbody tr:hover { background: var(--surface-2); }
+  table .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  table .pos-name { display: flex; align-items: center; gap: 9px; font-weight: 600; }
+  table .dot { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+  table .stand { display: block; font-size: 11px; color: var(--text-muted); font-weight: 400; }
+  table tfoot td { padding: 13px 16px; font-weight: 700; border-top: 2px solid var(--border); border-bottom: none; }
+
+  .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em; padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+  .chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .chip.buy { color: var(--pos); background: var(--pos-soft); }
+  .chip.hold { color: var(--hold); background: var(--hold-soft); }
+  .chip.sell { color: var(--neg); background: var(--neg-soft); }
+  .chip.more { color: var(--accent); background: var(--accent-soft); }
+  .chip.pause { color: var(--text-muted); background: var(--surface-2); }
+  .note { font-size: 11.5px; color: var(--text-muted); margin: 12px 4px 0; line-height: 1.6; }
+  .cmp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 620px) { .cmp-grid { grid-template-columns: 1fr; } }
+  .cmp-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .cmp-card.you { border-color: var(--accent); }
+  .cmp-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; margin-bottom: 10px; }
+  .cmp-value { font-family: var(--serif); font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .cmp-delta { display: inline-block; margin-top: 8px; font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; padding: 3px 10px; border-radius: 100px; }
+  .cmp-delta.pos { color: var(--pos); background: var(--pos-soft); }
+  .cmp-delta.neg { color: var(--neg); background: var(--neg-soft); }
+  .cmp-meta { font-size: 11.5px; color: var(--text-muted); margin-top: 10px; }
+  .cmp-vs { text-align: center; font-size: 12.5px; color: var(--text-muted); margin: 10px 0; }
+  .cmp-vs strong { color: var(--text); font-variant-numeric: tabular-nums; }
+
+  .expandable { cursor: pointer; }
+  .expandable:hover { background: var(--surface-2); }
+  .detail-row { display: none; }
+  .detail-row.open { display: table-row; }
+  .detail-row td { background: var(--surface-2); font-size: 12px; color: var(--text-muted); padding: 12px 16px; }
+  .chev { display: inline-block; margin-left: 6px; font-size: 10px; color: var(--text-muted); transition: transform .15s; }
+  .expandable.open .chev { transform: rotate(90deg); }
+
+  .callout { border: 1px solid var(--border); border-left: 3px solid var(--accent); background: var(--surface); border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow); font-size: 14px; }
+  .callout .callout-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--accent); margin: 0 0 8px; display: block; }
+  .callout p { margin: 0; line-height: 1.55; }
+  .pos { color: var(--pos); font-weight: 600; }
+  .neg { color: var(--neg); font-weight: 600; }
+
+  /* Rebalance bars */
+  .rebal-row { display: flex; align-items: center; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .rebal-row:last-child { border-bottom: none; }
+  .rebal-name { width: 150px; flex: none; font-size: 13px; font-weight: 600; }
+  .rebal-track { flex: 1; position: relative; height: 8px; background: var(--surface-2); border-radius: 5px; overflow: visible; }
+  .rebal-actual { position: absolute; inset: 0; border-radius: 5px; background: var(--accent); opacity: .55; }
+  .rebal-target { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--text); }
+  .rebal-nums { width: 190px; flex: none; text-align: right; font-size: 11.5px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .rebal-euro { width: 62px; flex: none; text-align: right; font-size: 13.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .rebal-legend { display: flex; gap: 18px; font-size: 11px; color: var(--text-muted); margin-top: 14px; }
+  .rebal-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .rebal-legend i { width: 10px; height: 3px; background: var(--accent); opacity: .55; border-radius: 2px; }
+  .rebal-legend i.t { width: 2px; height: 10px; background: var(--text); opacity: 1; }
+
+  /* Inspiration cards */
+  .inspo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+  .inspo-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .inspo-card .who { font-family: var(--serif); font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .inspo-card .link { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+  .inspo-card p { font-size: 12.5px; color: var(--text-muted); margin: 0; line-height: 1.55; }
+  .inspo-card .link b { color: var(--accent); font-weight: 700; }
+
+  /* Scenario tabs */
+  .scenario-tabs { display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 100px; padding: 3px; gap: 2px; margin-bottom: 4px; }
+  .scenario-tabs button { border: none; background: none; font-family: var(--sans); font-size: 12px; font-weight: 700; padding: 7px 16px; border-radius: 100px; cursor: pointer; color: var(--text-muted); transition: background .15s, color .15s; }
+  .scenario-tabs button.active { background: var(--accent); color: var(--bg); }
+  .scenario-tabs button:hover:not(.active) { color: var(--text); }
+  .scenario-summary { font-size: 13px; color: var(--text-muted); margin: 12px 0 22px; }
+  .scenario-summary strong { color: var(--text); font-variant-numeric: tabular-nums; }
+  .scenario-summary .sv { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .scenario-summary .sv.pos { color: var(--pos); }
+  .scenario-summary .sv.neg { color: var(--neg); }
+
+  /* Renditejäger card */
+  .rj-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 18px 20px; box-shadow: var(--shadow); transition: border-color .15s, transform .15s, opacity .15s; }
+  .rj-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .rj-card.dimmed { opacity: .45; }
+  .rj-card.selected-single { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .rj-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+  .rj-head .who { font-family: var(--serif); font-size: 16.5px; font-weight: 600; }
+  .rj-amount { font-size: 13px; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+  .rj-meta { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 11px; color: var(--text-muted); margin: 6px 0 10px; }
+  .risk-tag { font-weight: 700; padding: 1px 7px; border-radius: 5px; text-transform: uppercase; letter-spacing: .03em; font-size: 10px; }
+  .risk-tag.mid { color: var(--hold); background: var(--hold-soft); }
+  .risk-tag.high { color: var(--neg); background: var(--neg-soft); }
+  .deadline-badge { font-weight: 700; color: var(--text); }
+  .rj-card p.reason { font-size: 12.5px; color: var(--text-muted); margin: 0 0 12px; line-height: 1.55; }
+  .rj-scenario { display: flex; align-items: baseline; justify-content: space-between; border-top: 1px dashed var(--border); padding-top: 10px; font-size: 12.5px; }
+  .rj-scenario .lbl { color: var(--text-muted); }
+  .rj-scenario .val { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 15px; }
+  .rj-scenario .val.pos { color: var(--pos); }
+  .rj-scenario .val.neg { color: var(--neg); }
+  .watchlist-tag { font-size: 11px; font-weight: 700; color: var(--text-muted); background: var(--surface-2); padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+  .horizon-tabs { display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 100px; padding: 3px; gap: 2px; }
+  .horizon-tabs button { border: none; background: none; font-family: var(--sans); font-size: 11.5px; font-weight: 700; padding: 6px 13px; border-radius: 100px; cursor: pointer; color: var(--text-muted); transition: background .15s, color .15s; }
+  .horizon-tabs button.active { background: var(--text); color: var(--bg); }
+  .horizon-tabs button:hover:not(.active) { color: var(--text); }
+  .tabs-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 4px; }
+  .scenario-explainer { font-size: 12.5px; color: var(--text-muted); background: var(--surface-2); border-radius: 10px; padding: 10px 14px; margin: 10px 0 18px; max-width: 62ch; }
+  .scenario-explainer b { color: var(--text); }
+
+  /* Compact market pulse */
+  .pulse { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 620px) { .pulse { grid-template-columns: 1fr; } }
+  .pulse h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 0 0 10px; }
+  .pulse-line { margin: 17px 0 0; font-size: 14px; max-width: 72ch; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 18px 18px 20px; box-shadow: var(--shadow); }
+  .card h3 { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 14px; font-weight: 700; }
+  .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+  .market-table td { padding: 7px 0; border: none; border-bottom: 1px solid var(--border); }
+  .market-table tr:last-child td { border-bottom: none; }
+  .market-table td:first-child { color: var(--text-muted); }
+  .market-table td:nth-child(2) { text-align: right; font-variant-numeric: tabular-nums; padding-right: 10px; }
+  .market-table td:last-child { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+  .radar-item { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .radar-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .radar-item .rt { font-weight: 600; display: block; margin-bottom: 2px; }
+  .radar-item .rd { color: var(--text-muted); }
+
+  footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); max-width: 74ch; }
+  footer .disclaimer { font-style: italic; margin-bottom: 12px; }
+  footer .sources a { color: var(--text-muted); margin-right: 4px; }
+  footer .sources a:hover { color: var(--accent); }
+</style>
+
+<div class="top-glow"></div>
+<div class="page">
+
+  <header class="masthead">
+    <p class="kicker">Dein tägliches Vermögens-Briefing</p>
+    <h1 class="wordmark">Börsenblick</h1>
+    <p class="dateline">Montag, 20. Juli 2026</p>
+  </header>
+
+  <section class="briefing">
+    <div class="briefing-stat">
+      <span class="briefing-label">Dein Depot heute</span>
+      <span class="briefing-value">191,90&nbsp;€</span>
+      <span class="briefing-delta neg">−7,11&nbsp;€ · −3,6&nbsp;% seit Kauf</span>
+    </div>
+    <div class="todo-list">
+      <h2>Deine Prioritäten heute</h2>
+      <div class="todo-item">
+        <span class="todo-num">1</span>
+        <p><span class="tag money">Geld</span>Grundstein ist mit 64,6&nbsp;% schon über Ziel (45&nbsp;%) — die vollen 100&nbsp;€ diesen Monat sollten komplett in den <strong>Renditejäger-Topf</strong> fließen. 4 konkrete Ideen unten.</p>
+      </div>
+      <div class="todo-item">
+        <span class="todo-num">2</span>
+        <p><span class="tag urgent">Prüfen</span><strong>Rare Earth</strong> &amp; <strong>Gold Mining</strong> zeigen live deutlich niedrigere Kurse als zuletzt bekannt — einmal kurz gegen deine Trade-Republic-App checken.</p>
+      </div>
+      <div class="todo-item">
+        <span class="todo-num">3</span>
+        <p><span class="tag watch">Beobachten</span><strong>Donnerstag: EZB-Entscheidung</strong> — bei 89-Dollar-Öl entscheidend für die Zinsrichtung und damit für deinen Dividenden- und Gold-Anteil.</p>
+      </div>
+      <div class="todo-item">
+        <span class="todo-num">4</span>
+        <p><span class="tag watch">Beobachten</span>Berichtssaison startet morgen (GM) — zeigt, ob der Chip-Ausverkauf eine Übertreibung war. Betrifft indirekt deinen MSCI-World-Kern.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="advisor-chat">
+    <div class="advisor-chat-head">
+      <div class="advisor-avatar">🤖</div>
+      <div>
+        <h2>Frag deinen Berater</h2>
+        <p>Öffnet einen neuen Chat mit Claude, direkt mit deinem Depot-Kontext vorausgefüllt.</p>
+      </div>
+    </div>
+    <form class="advisor-form" id="advisorForm">
+      <input type="text" id="advisorInput" placeholder="z.B. Soll ich bei Rare Earth jetzt nachkaufen?" autocomplete="off" />
+      <button type="submit">Fragen →</button>
+    </form>
+    <div class="advisor-suggestions">
+      <button type="button" data-q="Was ist aktuell mein größtes Risiko im Depot?">Größtes Risiko?</button>
+      <button type="button" data-q="Erklär mir kurz den Unterschied zwischen Bear-, Base- und Bull-Szenario.">Bear/Base/Bull erklären</button>
+      <button type="button" data-q="Sollte ich diesen Monat wirklich in die Renditejäger-Ideen investieren oder lieber abwarten?">Jetzt investieren oder warten?</button>
+      <button type="button" data-q="Wie sicher ist mein Grundstein wirklich, wenn die Märkte crashen?">Grundstein wirklich sicher?</button>
+    </div>
+    <p class="advisor-note">Hinweis: Eine Live-KI läuft aus technischen Gründen nicht direkt eingebettet in dieser Seite — der Button öffnet einen neuen Claude-Chat in einem separaten Tab, vorausgefüllt mit deiner Frage und dem aktuellen Depot-Stand.</p>
+  </section>
+
+  <main class="col">
+
+    <section class="section">
+      <div class="section-head">
+        <h2>💼 Dein Depot</h2>
+        <span class="sub">6 Positionen · live nachgerechnet</span>
+      </div>
+
+      <div class="alloc-bar">
+        <span style="width:51.5%; background:var(--cat1)" title="Core MSCI World 51,5%"></span>
+        <span style="width:23.4%; background:var(--cat2)" title="Cybersecurity 23,4%"></span>
+        <span style="width:6.4%; background:var(--cat4)" title="Gold Mining 6,4%"></span>
+        <span style="width:5.5%; background:var(--cat3)" title="Rare Earth 5,5%"></span>
+        <span style="width:7.9%; background:var(--cat5)" title="Dividend 100 7,9%"></span>
+        <span style="width:5.3%; background:var(--cat6)" title="Div. Aristocrats 5,3%"></span>
+      </div>
+      <div class="alloc-legend">
+        <span><i style="background:var(--cat1)"></i>Core MSCI World · 51,5&nbsp;%</span>
+        <span><i style="background:var(--cat2)"></i>Cybersecurity · 23,4&nbsp;%</span>
+        <span><i style="background:var(--cat4)"></i>Gold Mining · 6,4&nbsp;%</span>
+        <span><i style="background:var(--cat3)"></i>Rare Earth · 5,5&nbsp;%</span>
+        <span><i style="background:var(--cat5)"></i>Dividend&nbsp;100 · 7,9&nbsp;%</span>
+        <span><i style="background:var(--cat6)"></i>Div.&nbsp;Aristocrats · 5,3&nbsp;%</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Position</th><th class="num">Anteile</th><th class="num">Kurs</th><th class="num">Wert</th><th class="num">G/V</th><th class="num">Bewertung</th></tr>
+          </thead>
+          <tbody id="depotBody">
+            <tr class="expandable" data-detail="d1">
+              <td><span class="pos-name"><span class="dot" style="background:var(--cat1)"></span>Core MSCI World<span class="stand">Basis-Baustein</span></span><span class="chev">▸</span></td>
+              <td class="num">0,7890</td><td class="num">125,19&nbsp;€<span class="stand">heute</span></td><td class="num">98,78&nbsp;€</td><td class="num neg">−1,23&nbsp;€</td>
+              <td class="num"><span class="chip hold">Hold</span></td>
+            </tr>
+            <tr class="detail-row" id="d1"><td colspan="6">ISIN IE00B4L5Y983 · Basis-Baustein seit Juni 2026 · Hold, weil breit gestreut und genau für Marktphasen wie diese gebaut — der Sparplan kauft automatisch günstiger nach.</td></tr>
+            <tr class="expandable" data-detail="d2">
+              <td><span class="pos-name"><span class="dot" style="background:var(--cat2)"></span>Cybersecurity<span class="stand">Themen-Wette</span></span><span class="chev">▸</span></td>
+              <td class="num">1,3459</td><td class="num">33,41&nbsp;€<span class="stand">heute</span></td><td class="num">44,97&nbsp;€</td><td class="num pos">+0,97&nbsp;€</td>
+              <td class="num"><span class="chip hold">Hold</span></td>
+            </tr>
+            <tr class="detail-row" id="d2"><td colspan="6">ISIN IE00BLPK3577 · Themen-Wette seit Juni 2026 · Hold, weil Umsätze nicht direkt am KI-Kapex hängen — Sippenhaft-Risiko im Sektor, aber fundamental unverändert.</td></tr>
+            <tr class="expandable" data-detail="d3">
+              <td><span class="pos-name"><span class="dot" style="background:var(--cat3)"></span>Rare Earth &amp; Metals<span class="stand">Themen-Wette</span></span><span class="chev">▸</span></td>
+              <td class="num">0,8860</td><td class="num">12,01&nbsp;€<span class="stand">heute ⚠️</span></td><td class="num">10,64&nbsp;€</td><td class="num neg">−4,36&nbsp;€</td>
+              <td class="num"><span class="chip hold">Hold</span></td>
+            </tr>
+            <tr class="detail-row" id="d3"><td colspan="6">ISIN IE0002PG6CA6 · Themen-Wette seit Juni 2026 · Kurs heute stark unter altem Referenzwert (Details oben) — Hold statt Buy, bis der Sprung verifiziert ist.</td></tr>
+            <tr class="expandable" data-detail="d4">
+              <td><span class="pos-name"><span class="dot" style="background:var(--cat4)"></span>Gold Mining<span class="stand">Gold-Hebel</span></span><span class="chev">▸</span></td>
+              <td class="num">0,1593</td><td class="num">76,71&nbsp;€<span class="stand">heute ⚠️</span></td><td class="num">12,22&nbsp;€</td><td class="num neg">−2,78&nbsp;€</td>
+              <td class="num"><span class="chip hold">Hold</span></td>
+            </tr>
+            <tr class="detail-row" id="d4"><td colspan="6">ISIN IE00B3CNHG25 · Gold-Hebel seit Juni 2026 · Kleinster Baustein, hebelt den Goldpreis in beide Richtungen — Gegenwind durch hohe Zinsen.</td></tr>
+            <tr class="expandable" data-detail="d5">
+              <td><span class="pos-name"><span class="dot" style="background:var(--cat5)"></span>Dividend 100<span class="stand">Ausschüttung</span></span><span class="chev">▸</span></td>
+              <td class="num">0,3931</td><td class="num">38,69&nbsp;€<span class="stand">heute</span></td><td class="num">15,21&nbsp;€</td><td class="num pos">+0,21&nbsp;€</td>
+              <td class="num"><span class="chip hold">Hold</span></td>
+            </tr>
+            <tr class="detail-row" id="d5"><td colspan="6">ISIN DE000A0F5UH1 · Ausschüttung seit Juni 2026 · Defensiver Baustein, konkurriert etwas mit hohen Anleiherenditen — trotzdem ruhig halten.</td></tr>
+            <tr class="expandable" data-detail="d6">
+              <td><span class="pos-name"><span class="dot" style="background:var(--cat6)"></span>Div. Aristocrats<span class="stand">Dividenden-Qualität</span></span><span class="chev">▸</span></td>
+              <td class="num">0,3019</td><td class="num">33,38&nbsp;€<span class="stand">heute</span></td><td class="num">10,08&nbsp;€</td><td class="num pos">+0,08&nbsp;€</td>
+              <td class="num"><span class="chip hold">Hold</span></td>
+            </tr>
+            <tr class="detail-row" id="d6"><td colspan="6">ISIN IE00B9CQXS71 · Dividenden-Qualität seit Juni 2026 · Profitiert vom Trend zu defensiven Sektoren in unruhigen Marktphasen.</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td>Gesamt</td><td></td><td></td><td class="num">191,90&nbsp;€</td><td class="num neg">−7,11&nbsp;€</td><td></td></tr>
+          </tfoot>
+        </table>
+      </div>
+      <p class="note">Alle 6 Kurse heute live recherchiert. ⚠️ Rare Earth &amp; Gold Mining liegen deutlich unter dem zuletzt bekannten Stand — über 2 Quellen je gegengecheckt, aber bitte einmal gegen dein echtes Depot verifizieren. Keine Anlageberatung. Klick auf eine Zeile für Details.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>📊 Dein Depot vs. MSCI World</h2>
+        <span class="sub">nutzt dieselben Regler wie unten: Szenario &amp; Zeitraum</span>
+      </div>
+      <div class="tabs-row">
+        <div class="scenario-tabs" role="tablist" aria-label="Vergleichs-Szenario">
+          <button type="button" class="active" data-cscenario="bear">Bear</button>
+          <button type="button" data-cscenario="base">Base</button>
+          <button type="button" data-cscenario="bull">Bull</button>
+        </div>
+        <div class="horizon-tabs" role="tablist" aria-label="Vergleichs-Zeitraum">
+          <button type="button" data-chorizon="7">7T</button>
+          <button type="button" class="active" data-chorizon="30">30T</button>
+          <button type="button" data-chorizon="90">90T</button>
+          <button type="button" data-chorizon="180">180T</button>
+          <button type="button" data-chorizon="360">360T</button>
+        </div>
+      </div>
+      <p class="note" style="margin: 10px 0 18px;">Dein Depot: wertgewichtetes Modell aus allen 6 Positionen (Rendite geglättet, Schwankung mit Diversifikations-Abschlag). MSCI World: historischer Richtwert ~7&nbsp;%/Jahr Rendite, ~15&nbsp;%/Jahr Schwankung.</p>
+      <div class="cmp-grid">
+        <div class="cmp-card you">
+          <div class="cmp-label">Dein Depot (191,90&nbsp;€)</div>
+          <div class="cmp-value" id="depotProjValue">–</div>
+          <div class="cmp-delta" id="depotProjDelta">–</div>
+          <div class="cmp-meta">Modell: ~8,5&nbsp;%/Jahr erwartete Rendite, ~17,4&nbsp;%/Jahr Schwankung</div>
+        </div>
+        <div class="cmp-card">
+          <div class="cmp-label">Gleicher Betrag in MSCI World</div>
+          <div class="cmp-value" id="benchProjValue">–</div>
+          <div class="cmp-delta" id="benchProjDelta">–</div>
+          <div class="cmp-meta">Modell: ~7&nbsp;%/Jahr erwartete Rendite, ~15&nbsp;%/Jahr Schwankung</div>
+        </div>
+      </div>
+      <p class="cmp-vs" id="cmpVsLine">–</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>🏗️ Deine 100&nbsp;€ diesen Monat: 40&nbsp;% Grundstein / 60&nbsp;% Risiko</h2>
+        <span class="sub">Depot gesamt aktuell 65&nbsp;% Grundstein / 35&nbsp;% Renditejäger</span>
+      </div>
+      <div class="alloc-bar" style="height:14px;">
+        <span style="width:40%; background:var(--cat1)" title="Grundstein 40 €"></span>
+        <span style="width:60%; background:var(--neg)" title="Risiko 60 €"></span>
+      </div>
+      <div class="alloc-legend" style="margin-bottom:18px;">
+        <span><i style="background:var(--cat1)"></i>Grundstein · 40&nbsp;€</span>
+        <span><i style="background:var(--neg)"></i>Risikoreich · 60&nbsp;€</span>
+      </div>
+
+      <div class="card-grid" style="margin-bottom: 26px;">
+        <div class="card">
+          <h3>Grundstein-Anteil (40&nbsp;€)</h3>
+          <table class="market-table">
+            <tbody>
+              <tr><td>Core MSCI World</td><td>20&nbsp;€</td><td class="pos">50&nbsp;%</td></tr>
+              <tr><td>Dividend 100</td><td>12&nbsp;€</td><td class="pos">30&nbsp;%</td></tr>
+              <tr><td>Div. Aristocrats</td><td>8&nbsp;€</td><td class="pos">20&nbsp;%</td></tr>
+            </tbody>
+          </table>
+          <p class="note">Verteilung nach deiner ursprünglichen Sparplan-Gewichtung — breit, planbar, kein Timing nötig.</p>
+        </div>
+        <div class="card">
+          <h3>Risiko-Anteil (60&nbsp;€)</h3>
+          <table class="market-table">
+            <tbody>
+              <tr><td>TSMC-Rebound</td><td>18&nbsp;€</td><td>30&nbsp;%</td></tr>
+              <tr><td>GM-Erdgeoulslauf</td><td>12&nbsp;€</td><td>20&nbsp;%</td></tr>
+              <tr><td>Novo Nordisk</td><td>15&nbsp;€</td><td>25&nbsp;%</td></tr>
+              <tr><td>Öl-Momentum</td><td>15&nbsp;€</td><td>25&nbsp;%</td></tr>
+            </tbody>
+          </table>
+          <p class="note">4 Ideen mit konkretem Nahzeit-Katalysator und festem Prüf-Termin — Details unten.</p>
+        </div>
+      </div>
+
+      <div class="section-head" style="margin-bottom: 6px;">
+        <h3 style="font-family:var(--serif); font-size:19px; font-weight:600; margin:0;">Renditejäger-Ideen &amp; Prognose-Szenarien</h3>
+      </div>
+
+      <div class="tabs-row">
+        <div class="scenario-tabs" role="tablist" aria-label="Szenario wählen">
+          <button type="button" class="active" data-scenario="bear">Bear</button>
+          <button type="button" data-scenario="base">Base</button>
+          <button type="button" data-scenario="bull">Bull</button>
+        </div>
+        <div class="horizon-tabs" role="tablist" aria-label="Zeitraum wählen">
+          <button type="button" data-horizon="7">7T</button>
+          <button type="button" class="active" data-horizon="30">30T</button>
+          <button type="button" data-horizon="90">90T</button>
+          <button type="button" data-horizon="180">180T</button>
+          <button type="button" data-horizon="360">360T</button>
+        </div>
+        <div class="scenario-tabs" role="tablist" aria-label="Allokations-Modus">
+          <button type="button" class="active" data-mode="spread">Gestreut (4)</button>
+          <button type="button" data-mode="single">Alles auf 1</button>
+        </div>
+      </div>
+
+      <p class="scenario-explainer" id="scenarioExplainer">🐻 <b>Bear:</b> Die These geht nicht auf oder Gegenwind überwiegt — dein realistisches Verlust-Szenario.</p>
+
+      <p class="scenario-summary" id="summaryLine">Szenario „<span id="scenarioName">Bear</span>" über <span id="modeLabel">alle 4 Ideen</span> (<span id="stakeLabel">60&nbsp;€</span> Einsatz, <span id="horizonLabel">30</span>&nbsp;Tage): <span class="sv" id="scenarioTotal">–</span> — reine Modellrechnung, keine Prognose-Garantie.</p>
+
+      <div class="callout" style="margin-bottom:22px;">
+        <span class="callout-label">🧑‍💼 Meine Einschätzung als dein Berater</span>
+        <p>Bei 60&nbsp;€ Einsatz ist der Euro-Unterschied zwischen „gestreut" und „alles auf eine Karte" klein — aber das <strong>Risiko eines Totalausfalls</strong> ist bei einer Einzelwette ungleich höher. Ich würde an deiner Stelle gestreut bleiben, so lange dein Risiko-Topf so klein ist. Konzentration lohnt sich erst, wenn eine These wirklich überzeugt <em>und</em> der Einsatz groß genug ist, dass Diversifikation kaum noch etwas glättet. Zum Ausprobieren kannst du oben trotzdem auf „Alles auf 1" umschalten und eine Aktie einzeln anklicken.</p>
+      </div>
+
+      <div class="inspo-grid" id="fundedGrid">
+        <div class="rj-card" data-funded="true" data-amount="18" data-drift="22" data-vol="40">
+          <div class="rj-head"><span class="who">TSMC-Rebound</span><span class="rj-amount" data-amount-label>18&nbsp;€</span></div>
+          <div class="rj-meta">
+            <span class="risk-tag mid">Mittel</span>
+            <span>Kaufen bis <b>31.07.2026</b></span>
+            <span>Prüfen am <b class="deadline-badge" data-deadline="2026-09-14">14.09.2026</b></span>
+          </div>
+          <p class="reason">TSMC meldete einen Gewinnsprung, während der ganze Sektor abverkauft wurde — Fundamentaldaten und Kurs laufen auseinander. These: Die Schere schließt sich mit der breiten Berichtssaison. Mean-Reversion-Trade.</p>
+          <div class="rj-scenario"><span class="lbl">Modell-Ergebnis</span><span class="val" data-val>–</span></div>
+        </div>
+
+        <div class="rj-card" data-funded="true" data-amount="12" data-drift="10" data-vol="55">
+          <div class="rj-head"><span class="who">GM-Erdgeoulslauf</span><span class="rj-amount" data-amount-label>12&nbsp;€</span></div>
+          <div class="rj-meta">
+            <span class="risk-tag high">Hoch</span>
+            <span>Kaufen bis <b>20.07.2026</b></span>
+            <span>Prüfen am <b class="deadline-badge" data-deadline="2026-07-21">21.07.2026</b></span>
+          </div>
+          <p class="reason">GM legt <strong>morgen</strong> Zahlen vor — erster Stimmungstest nach dem Freitags-Ausverkauf. Naher, klarer Katalysator, aber Earnings-Risiko: kann in beide Richtungen scharf ausschlagen.</p>
+          <div class="rj-scenario"><span class="lbl">Modell-Ergebnis</span><span class="val" data-val>–</span></div>
+        </div>
+
+        <div class="rj-card" data-funded="true" data-amount="15" data-drift="20" data-vol="32">
+          <div class="rj-head"><span class="who">Novo Nordisk</span><span class="rj-amount" data-amount-label>15&nbsp;€</span></div>
+          <div class="rj-meta">
+            <span class="risk-tag mid">Mittel</span>
+            <span>Kaufen bis <b>31.07.2026</b></span>
+            <span>Prüfen am <b class="deadline-badge" data-deadline="2026-09-14">14.09.2026</b></span>
+          </div>
+          <p class="reason">EU-Zulassung der Wegovy-Pille ist bereits Fakt. Der Markt braucht meist mehrere Wochen, um ein neu zugelassenes Produkt einzupreisen — Katalysator ist schon eingetreten, Nachlauf läuft noch.</p>
+          <div class="rj-scenario"><span class="lbl">Modell-Ergebnis</span><span class="val" data-val>–</span></div>
+        </div>
+
+        <div class="rj-card" data-funded="true" data-amount="15" data-drift="12" data-vol="50">
+          <div class="rj-head"><span class="who">Öl-/Energie-Momentum</span><span class="rj-amount" data-amount-label>15&nbsp;€</span></div>
+          <div class="rj-meta">
+            <span class="risk-tag high">Hoch</span>
+            <span>Kaufen bis <b>25.07.2026</b></span>
+            <span>Prüfen am <b class="deadline-badge" data-deadline="2026-08-14">14.08.2026</b></span>
+          </div>
+          <p class="reason">Brent bei 89,45&nbsp;$ und steigend, solange der Iran-Konflikt eskaliert. Momentum-Trade — Kehrseite: jede Deeskalation lässt den Preis genauso schnell wieder fallen.</p>
+          <div class="rj-scenario"><span class="lbl">Modell-Ergebnis</span><span class="val" data-val>–</span></div>
+        </div>
+      </div>
+
+      <h3 style="font-size:13px; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin:30px 0 14px;">Weitere Kandidaten mit 10–30&nbsp;% Potenzial (Watchlist, noch kein Geld zugeteilt)</h3>
+      <div class="inspo-grid">
+        <div class="rj-card" data-funded="false" data-drift="18" data-vol="38">
+          <div class="rj-head"><span class="who">Alibaba / Tencent</span><span class="watchlist-tag">Watchlist</span></div>
+          <div class="rj-meta"><span class="risk-tag mid">Mittel</span><span>Katalysator: China-Tech-Rotation</span></div>
+          <p class="reason">Beide heute schon +3–5&nbsp;% im Sog der Hongkong-Rally. These: Kapital rotiert weiter von US-KI-Hardware in chinesische Plattformen, solange die Moonshot-Story läuft.</p>
+          <div class="rj-scenario"><span class="lbl">Modell-Ergebnis</span><span class="val" data-val>–</span></div>
+        </div>
+        <div class="rj-card" data-funded="false" data-drift="10" data-vol="20">
+          <div class="rj-head"><span class="who">Microsoft / Apple</span><span class="watchlist-tag">Watchlist</span></div>
+          <div class="rj-meta"><span class="risk-tag mid" style="color:var(--pos);background:var(--pos-soft)">Niedriger</span><span>Katalysator: Qualitäts-Flucht</span></div>
+          <p class="reason">Beide profitierten heute schon vom Geldfluss aus riskanten Chip-Werten in Cashflow-starke Qualität. Niedrigeres Risiko als die anderen Ideen — dafür auch niedrigere Renditespanne.</p>
+          <div class="rj-scenario"><span class="lbl">Modell-Ergebnis</span><span class="val" data-val>–</span></div>
+        </div>
+        <div class="rj-card" data-funded="false" data-drift="25" data-vol="48">
+          <div class="rj-head"><span class="who">SK Hynix / Samsung</span><span class="watchlist-tag">Watchlist</span></div>
+          <div class="rj-meta"><span class="risk-tag high">Hoch</span><span>Katalysator: Oversold-Rebound</span></div>
+          <p class="reason">Beide zuletzt tiefrot wegen KI-Kapex-Angst — dieselbe „Übertreibung"-These wie bei TSMC, nur konzentrierter und volatiler. Contrarian-Wette auf eine Gegenbewegung.</p>
+          <div class="rj-scenario"><span class="lbl">Modell-Ergebnis</span><span class="val" data-val>–</span></div>
+        </div>
+        <div class="rj-card" data-funded="false" data-drift="28" data-vol="60">
+          <div class="rj-head"><span class="who">MP Materials</span><span class="watchlist-tag">Watchlist</span></div>
+          <div class="rj-meta"><span class="risk-tag high">Hoch</span><span>Katalysator: reine Rare-Earth-Wette</span></div>
+          <p class="reason">US-Seltene-Erden-Förderer, direkt an derselben Knappheits-These wie dein VanEck-ETF dran — aber konzentriert auf eine Aktie statt breit gestreut. Höheres Risiko, höheres Potenzial als die ETF-Position.</p>
+          <div class="rj-scenario"><span class="lbl">Modell-Ergebnis</span><span class="val" data-val>–</span></div>
+        </div>
+      </div>
+
+      <p class="note" style="margin-top:18px;">⚠️ Alle Prozentzahlen sind ein <strong>vereinfachtes Modell</strong> (Rendite skaliert linear mit der Zeit, Schwankungsbreite mit der Wurzel der Zeit — Standard-Faustregel, keine Analysten-Kursziele). Reale Kurse springen unregelmäßiger, gerade um Ereignisse wie Erdgeoulsläufe herum. 1–2-Monats-Trades sind deutlich volatiler als deine ETFs, und bei kleinen Beträgen fressen Gebühren/Spreads relativ mehr vom Ergebnis. Einordnung, keine Kauf-Empfehlung.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>🧭 Woran sich deine Strategie orientiert</h2>
+        <span class="sub">Kern-Satellit, nicht neu erfunden</span>
+      </div>
+      <div class="inspo-grid">
+        <div class="inspo-card">
+          <div class="who">Bogle &amp; Buffett</div>
+          <div class="link">Dein <b>MSCI-World-Kern</b></div>
+          <p>Beide predigen seit Jahrzehnten dasselbe: breite, günstige Indexfonds als Basis schlagen die meisten aktiven Wetten. Dein größter Baustein folgt genau dieser Logik.</p>
+        </div>
+        <div class="inspo-card">
+          <div class="who">Ray Dalio (All Weather)</div>
+          <div class="link">Dein <b>Gold-Mining-Anteil</b></div>
+          <p>Dalios Portfolio nutzt Gold gezielt als Anker, der sich unabhängig von Aktien bewegt. Dein Mining-Hebel ist eine aggressivere Variante derselben Idee.</p>
+        </div>
+        <div class="inspo-card">
+          <div class="who">Rohstoff-Investoren (z.B. Rick Rule)</div>
+          <div class="link">Dein <b>Rare-Earth-Anteil</b></div>
+          <p>Wetten auf knappe, strategisch wichtige Rohstoffe sind ein eigener Investmentstil — zyklisch, volatil, aber mit klarer Angebots-Knappheits-These. Genau dein Ansatz hier.</p>
+        </div>
+        <div class="inspo-card">
+          <div class="who">Thematische Investoren (z.B. Cathie Wood)</div>
+          <div class="link">Dein <b>Cybersecurity-Anteil</b></div>
+          <p>Konzentrierte Wetten auf einen Trend bringen mehr Chance <em>und</em> mehr Schwankung. Wood fährt das viel aggressiver — deine kleinere Dosierung ist der vorsichtigere Bruder davon.</p>
+        </div>
+        <div class="inspo-card">
+          <div class="who">Dividend-Growth-Ansatz</div>
+          <div class="link">Deine <b>Dividenden-ETFs</b></div>
+          <p>Firmen, die verlässlich Dividenden zahlen und steigern, gelten als defensiver Baustein für unruhige Marktphasen — genau das, wonach dein Depot gerade fragt.</p>
+        </div>
+        <div class="inspo-card">
+          <div class="who">Kern-Satellit-Strategie</div>
+          <div class="link">Dein <b>Gesamtaufbau</b></div>
+          <p>Ein breiter Kern plus mehrere kleine Themen-Wetten drumherum — ein Ansatz, den u.a. deutsche Finanzbildungs-Kanäle wie Finanzfluss populär gemacht haben. Dein Depot ist ein Lehrbuchbeispiel dafür.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>📰 Markt in Kürze</h2>
+        <span class="sub">Nur die Wins &amp; Losses, ohne Umschweife</span>
+      </div>
+      <p class="pulse-line">Chip-Ausverkauf hält an (Halbleiter-ETF <span class="neg">−17&nbsp;%</span> im Juli, Auslöser: KI-Modell aus China), während Hongkong dieselbe News feiert. Öl bei 89,45&nbsp;$ treibt die Inflationsangst, Gold kämpft mit der 4.000-$-Marke.</p>
+      <div class="pulse" style="margin-top:18px;">
+        <div>
+          <h3>✅ Wins</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr><td>Hang Seng Tech</td><td class="num pos">+2,79&nbsp;%</td></tr>
+                <tr><td>CNOOC (HK)</td><td class="num pos">+5&nbsp;%</td></tr>
+                <tr><td>Terbium (Spot)</td><td class="num pos">+21,6&nbsp;%</td></tr>
+                <tr><td>Brent-Öl</td><td class="num pos">+1,5&nbsp;%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h3>❌ Losses</h3>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr><td>US-Halbleiter-ETF (Juli)</td><td class="num neg">−17&nbsp;%</td></tr>
+                <tr><td>Nasdaq (Woche)</td><td class="num neg">−2,9&nbsp;%</td></tr>
+                <tr><td>Gold (Fr., zeitweise)</td><td class="num neg">&lt;4.000&nbsp;$</td></tr>
+                <tr><td>Dell (Fr.)</td><td class="num neg">−10&nbsp;%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card-grid">
+        <div class="card">
+          <h3>🌍 Die Lage</h3>
+          <table class="market-table">
+            <tbody>
+              <tr><td>DAX</td><td>24.830,98</td><td class="neg">−0,34&nbsp;%</td></tr>
+              <tr><td>S&amp;P 500</td><td>7.457,69</td><td class="neg">−1,01&nbsp;%</td></tr>
+              <tr><td>Nasdaq Comp.</td><td>25.520,24</td><td class="neg">−1,4&nbsp;%</td></tr>
+              <tr><td>Hang Seng</td><td>25.143,05</td><td class="pos">+2,36&nbsp;%</td></tr>
+              <tr><td>Bitcoin</td><td>57.100&nbsp;€</td><td class="pos">+0,9&nbsp;%</td></tr>
+              <tr><td>Brent</td><td>89,45&nbsp;$</td><td class="pos">+1,5&nbsp;%</td></tr>
+              <tr><td>Gold</td><td>4.007&nbsp;$</td><td class="neg">−0,1&nbsp;%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>🔭 Radar</h3>
+          <div class="radar-item"><span class="rt">KI-Boom — wer verdient wirklich?</span><span class="rd">Berichtssaison ab dieser Woche liefert erste Antworten.</span></div>
+          <div class="radar-item"><span class="rt">DAX klebt an der 24.800</span><span class="rd">Wochenschluss darunter wäre das erste Bruchsignal.</span></div>
+          <div class="radar-item"><span class="rt">Öl, Iran &amp; die Zins-Kette</span><span class="rd">EZB am Donnerstag ist der nächste Trigger.</span></div>
+          <div class="radar-item"><span class="rt">Seltene-Erden-Squeeze</span><span class="rd">Exportkontroll-Schonfrist endet 10.11.2026.</span></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p class="disclaimer">Kein Anlage-Tipp, sondern Einordnung — Entscheidungen triffst du selbst.</p>
+    <p class="sources">Quellen:
+      <a href="https://www.finanzen.net" target="_blank" rel="noopener">finanzen.net</a>·
+      <a href="https://www.onvista.de" target="_blank" rel="noopener">onvista.de</a>·
+      <a href="https://www.boerse.de" target="_blank" rel="noopener">boerse.de</a>·
+      <a href="https://www.wallstreet-online.de/nachrichten" target="_blank" rel="noopener">wallstreet-online.de</a>·
+      <a href="https://finance.yahoo.com" target="_blank" rel="noopener">Yahoo Finance</a>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var fmtEUR = function (n) {
+      var s = n.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return (n > 0 ? "+" : n < 0 ? "−" : "±") + s.replace("-", "") + " €";
+    };
+    var fmtPct = function (n) {
+      var s = Math.abs(n).toLocaleString("de-DE", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      return (n > 0 ? "+" : n < 0 ? "−" : "±") + s + " %";
+    };
+    var names = { bear: "Bear", base: "Base", bull: "Bull" };
+    var allCards = Array.prototype.slice.call(document.querySelectorAll(".rj-card"));
+    var fundedCards = allCards.filter(function (c) { return c.getAttribute("data-funded") === "true"; });
+    var scenarioTabsEls = document.querySelectorAll('.tabs-row .scenario-tabs[aria-label="Szenario wählen"] button');
+    var horizonTabsEls = document.querySelectorAll(".horizon-tabs button");
+    var modeTabsEls = document.querySelectorAll('.tabs-row .scenario-tabs[aria-label="Allokations-Modus"] button');
+    var state = { scenario: "bear", horizon: 30, mode: "spread", singleCard: fundedCards[0] };
+
+    function pctFor(card, scenario, horizonDays) {
+      var drift = parseFloat(card.getAttribute("data-drift"));
+      var vol = parseFloat(card.getAttribute("data-vol"));
+      var t = horizonDays / 360;
+      var base = drift * t;
+      var band = vol * Math.sqrt(t);
+      if (scenario === "bear") return base - band;
+      if (scenario === "bull") return base + band;
+      return base;
+    }
+
+    function render() {
+      var total = 0;
+      allCards.forEach(function (card) {
+        var pct = pctFor(card, state.scenario, state.horizon);
+        var funded = card.getAttribute("data-funded") === "true";
+        var target = card.querySelector("[data-val]");
+        var amountLabel = card.querySelector("[data-amount-label]");
+        var euro = 0;
+        var isActiveStake = true;
+
+        if (funded) {
+          if (state.mode === "spread") {
+            euro = parseFloat(card.getAttribute("data-amount")) * pct / 100;
+            if (amountLabel) amountLabel.textContent = card.getAttribute("data-amount") + " €";
+            card.classList.remove("dimmed");
+          } else {
+            var isSelected = card === state.singleCard;
+            isActiveStake = isSelected;
+            euro = isSelected ? 60 * pct / 100 : 0;
+            if (amountLabel) amountLabel.textContent = isSelected ? "60 €" : "nicht gewählt";
+            card.classList.toggle("dimmed", !isSelected);
+          }
+          if (isActiveStake) total += euro;
+          target.textContent = fmtEUR(euro) + " (" + fmtPct(pct) + ")";
+        } else {
+          target.textContent = fmtPct(pct) + " (Modellwert)";
+          card.classList.remove("dimmed");
+        }
+        target.classList.remove("pos", "neg");
+        target.classList.add(pct >= 0 ? "pos" : "neg");
+      });
+
+      var totalPct = (total / 60) * 100;
+      var totalEl = document.getElementById("scenarioTotal");
+      totalEl.textContent = fmtEUR(total) + " (" + fmtPct(totalPct) + ")";
+      totalEl.classList.remove("pos", "neg");
+      totalEl.classList.add(total >= 0 ? "pos" : "neg");
+
+      document.getElementById("scenarioName").textContent = names[state.scenario];
+      document.getElementById("horizonLabel").textContent = state.horizon;
+      document.getElementById("stakeLabel").textContent = "60 €";
+      document.getElementById("modeLabel").textContent = state.mode === "spread"
+        ? "alle 4 Ideen"
+        : (state.singleCard.querySelector(".who").textContent + " allein");
+      document.getElementById("scenarioExplainer").textContent = explainerText(state.scenario);
+
+      scenarioTabsEls.forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-scenario") === state.scenario); });
+      horizonTabsEls.forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-horizon") === String(state.horizon)); });
+      modeTabsEls.forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-mode") === state.mode); });
+
+      fundedCards.forEach(function (c) {
+        c.style.cursor = state.mode === "single" ? "pointer" : "";
+        c.classList.toggle("selected-single", state.mode === "single" && c === state.singleCard);
+      });
+    }
+
+    function explainerText(scenario) {
+      if (scenario === "bear") return "Bear: Die These geht nicht auf oder Gegenwind ueberwiegt - dein realistisches Verlust-Szenario.";
+      if (scenario === "bull") return "Bull: Die These geht voll auf, Rueckenwind bestaetigt sich - dein optimistisches, aber plausibles Szenario.";
+      return "Base: Es laeuft ungefaehr so, wie die Story es nahelegt - weder Drama noch Wunder, der wahrscheinlichste Fall.";
+    }
+
+    scenarioTabsEls.forEach(function (b) {
+      b.addEventListener("click", function () { state.scenario = b.getAttribute("data-scenario"); render(); });
+    });
+    horizonTabsEls.forEach(function (b) {
+      b.addEventListener("click", function () { state.horizon = parseInt(b.getAttribute("data-horizon"), 10); render(); });
+    });
+    modeTabsEls.forEach(function (b) {
+      b.addEventListener("click", function () { state.mode = b.getAttribute("data-mode"); render(); });
+    });
+    fundedCards.forEach(function (c) {
+      c.addEventListener("click", function () {
+        if (state.mode !== "single") return;
+        state.singleCard = c;
+        render();
+      });
+    });
+
+    render();
+
+    document.querySelectorAll(".deadline-badge").forEach(function (el) {
+      var deadline = new Date(el.getAttribute("data-deadline") + "T00:00:00");
+      var now = new Date();
+      now.setHours(0, 0, 0, 0);
+      var days = Math.round((deadline - now) / 86400000);
+      var suffix = days > 1 ? " (in " + days + " Tagen)" : days === 1 ? " (morgen)" : days === 0 ? " (heute)" : " (vorbei)";
+      el.textContent = el.textContent + suffix;
+    });
+
+    var context = "Kontext: Mein Depot ist 191,90 EUR wert (Core MSCI World, Cybersecurity, Rare Earth, Gold Mining, 2 Dividenden-ETFs). Strategie: 45% Grundstein, 55% Renditejaeger (kurzfristige Ideen mit 1-2 Monaten Horizont). Sparrate 100 EUR/Monat, davon 40% Grundstein, 60% Risiko. Meine Frage: ";
+    function askAdvisor(question) {
+      if (!question) return;
+      var url = "https://claude.ai/new?q=" + encodeURIComponent(context + question);
+      window.open(url, "_blank", "noopener");
+    }
+    var advisorForm = document.getElementById("advisorForm");
+    if (advisorForm) {
+      advisorForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var input = document.getElementById("advisorInput");
+        askAdvisor(input.value.trim());
+      });
+    }
+    document.querySelectorAll(".advisor-suggestions button").forEach(function (b) {
+      b.addEventListener("click", function () { askAdvisor(b.getAttribute("data-q")); });
+    });
+
+    document.querySelectorAll(".expandable").forEach(function (row) {
+      row.addEventListener("click", function () {
+        var detail = document.getElementById(row.getAttribute("data-detail"));
+        var willOpen = !row.classList.contains("open");
+        row.classList.toggle("open", willOpen);
+        if (detail) detail.classList.toggle("open", willOpen);
+      });
+    });
+
+    function pctModel(drift, vol, scenario, horizonDays) {
+      var t = horizonDays / 360;
+      var base = drift * t;
+      var band = vol * Math.sqrt(t);
+      if (scenario === "bear") return base - band;
+      if (scenario === "bull") return base + band;
+      return base;
+    }
+
+    var cmpState = { scenario: "bear", horizon: 30 };
+    var cmpScenarioBtns = document.querySelectorAll("[data-cscenario]");
+    var cmpHorizonBtns = document.querySelectorAll("[data-chorizon]");
+    var DEPOT_VALUE = 191.90;
+
+    function renderCmp() {
+      var depotPct = pctModel(8.5, 17.4, cmpState.scenario, cmpState.horizon);
+      var benchPct = pctModel(7, 15, cmpState.scenario, cmpState.horizon);
+      var depotVal = DEPOT_VALUE * (1 + depotPct / 100);
+      var benchVal = DEPOT_VALUE * (1 + benchPct / 100);
+
+      document.getElementById("depotProjValue").textContent = depotVal.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+      var dd = document.getElementById("depotProjDelta");
+      dd.textContent = fmtEUR(depotVal - DEPOT_VALUE) + " (" + fmtPct(depotPct) + ")";
+      dd.classList.remove("pos", "neg"); dd.classList.add(depotPct >= 0 ? "pos" : "neg");
+
+      document.getElementById("benchProjValue").textContent = benchVal.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+      var bd = document.getElementById("benchProjDelta");
+      bd.textContent = fmtEUR(benchVal - DEPOT_VALUE) + " (" + fmtPct(benchPct) + ")";
+      bd.classList.remove("pos", "neg"); bd.classList.add(benchPct >= 0 ? "pos" : "neg");
+
+      var diff = depotVal - benchVal;
+      var vsLine = document.getElementById("cmpVsLine");
+      if (Math.abs(diff) < 0.005) {
+        vsLine.textContent = "In diesem Szenario liegen dein Depot und MSCI World praktisch gleichauf.";
+      } else if (diff > 0) {
+        vsLine.innerHTML = "Dein Depot liegt in diesem Szenario <strong>" + fmtEUR(diff) + "</strong> vor MSCI World.";
+      } else {
+        vsLine.innerHTML = "MSCI World liegt in diesem Szenario <strong>" + fmtEUR(-diff) + "</strong> vor deinem Depot.";
+      }
+
+      cmpScenarioBtns.forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-cscenario") === cmpState.scenario); });
+      cmpHorizonBtns.forEach(function (b) { b.classList.toggle("active", b.getAttribute("data-chorizon") === String(cmpState.horizon)); });
+    }
+
+    cmpScenarioBtns.forEach(function (b) {
+      b.addEventListener("click", function () { cmpState.scenario = b.getAttribute("data-cscenario"); renderCmp(); });
+    });
+    cmpHorizonBtns.forEach(function (b) {
+      b.addEventListener("click", function () { cmpState.horizon = parseInt(b.getAttribute("data-chorizon"), 10); renderCmp(); });
+    });
+    renderCmp();
+  })();
+</script>
